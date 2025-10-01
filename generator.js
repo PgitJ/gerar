@@ -1,4 +1,4 @@
-// generator.js - Versão 3.0
+// generator.js - Versão 3.1 (Correção de Campos Vazios)
 
 const mainForm = document.getElementById('main-link-form');
 const typeSelect = document.getElementById('type');
@@ -23,6 +23,7 @@ const mainFields = ['title', 'target', 'description', 'thumbnail', 'type', 'isVi
 function addItem() {
     const itemTitle = document.getElementById('item-title').value.trim();
     const itemTarget = document.getElementById('item-target').value.trim();
+    // NOTA: Esses campos agora armazenam "" se vazios
     const itemDescription = document.getElementById('item-description').value.trim();
     const itemThumbnail = document.getElementById('item-thumbnail').value.trim();
 
@@ -39,7 +40,7 @@ function addItem() {
     };
 
     folderItems.push(newItem);
-    
+
     // Limpa o formulário de adição
     document.getElementById('item-title').value = '';
     document.getElementById('item-target').value = '';
@@ -65,7 +66,7 @@ function removeItem(index) {
  */
 function renderFolderItemsList() {
     sublinkList.innerHTML = '';
-    
+
     if (folderItems.length === 0) {
         noItemsMessage.style.display = 'block';
         sublinkList.appendChild(noItemsMessage);
@@ -86,25 +87,22 @@ function renderFolderItemsList() {
 }
 
 
-// --- FUNÇÃO DE PRÉ-VISUALIZAÇÃO (CORRIGIDA) ---
+// --- FUNÇÃO DE PRÉ-VISUALIZAÇÃO (mantida a lógica de visualização) ---
 
 /**
  * Cria a estrutura HTML de um link individual (para pré-visualização).
- * @param {object} item - Objeto contendo os dados do link.
- * @param {boolean} isSublink - Indica se é um item dentro de uma pasta.
- * @returns {HTMLElement} O elemento <a> ou <div> de pré-visualização.
  */
 function createPreviewItem(item, isSublink = false) {
     const linkElement = document.createElement('a');
     linkElement.href = item.target || '#';
     linkElement.target = "_blank";
     linkElement.className = 'preview-link-item';
-    
-    // Define a cor do texto do sublink para se adequar ao fundo claro
+
     const titleColor = isSublink ? '#333' : '#333';
     const descColor = isSublink ? '#666' : '#666';
 
     const img = document.createElement('img');
+    // Usa placeholder se não houver URL, mas item.thumbnail pode ser ""
     img.src = item.thumbnail || 'https://via.placeholder.com/50';
     img.alt = item.title;
     img.className = 'preview-thumbnail';
@@ -112,12 +110,13 @@ function createPreviewItem(item, isSublink = false) {
 
     const detailsDiv = document.createElement('div');
     detailsDiv.className = 'preview-details';
-    
+
     const titleH3 = document.createElement('h3');
     titleH3.textContent = item.title;
     titleH3.style.color = titleColor;
     detailsDiv.appendChild(titleH3);
 
+    // Só adiciona o parágrafo de descrição se houver texto
     if (item.description) {
         const descP = document.createElement('p');
         descP.textContent = item.description;
@@ -139,43 +138,38 @@ function updatePreview() {
         target: document.getElementById('target').value.trim(),
         description: document.getElementById('description').value.trim(),
         thumbnail: document.getElementById('thumbnail').value.trim(),
-        type: typeSelect.value, 
+        type: typeSelect.value,
         isVisible: document.getElementById('isVisible').value === 'true'
     };
-    
-    previewDisplay.innerHTML = ''; 
+
+    previewDisplay.innerHTML = '';
 
     if (!item.isVisible) {
         previewDisplay.innerHTML = '<p style="color: red; font-weight: bold; margin-top: 50px;">[Link Oculto] Não será exibido.</p>';
         return;
     }
-    
+
     if (item.type === 'LINK_DIRECT') {
-        // Renderiza como um link direto
         previewDisplay.appendChild(createPreviewItem(item));
     } else if (item.type === 'FOLDER') {
-        // Renderiza como uma PASTA
-        
-        // 1. Título da Pasta (Botão do Acordeão)
         const folderTitle = document.createElement('div');
         folderTitle.className = 'preview-folder-title';
-        
+
         const titleH3 = document.createElement('h3');
         titleH3.textContent = item.title;
         folderTitle.appendChild(titleH3);
-        
-        const svgIcon = createSvgIcon(); // Função para criar o ícone da seta
+
+        const svgIcon = createSvgIcon();
         folderTitle.appendChild(svgIcon);
 
         previewDisplay.appendChild(folderTitle);
 
-        // 2. Container dos Itens
         const contentContainer = document.createElement('div');
         contentContainer.className = 'group-items-container';
-        
+
         if (folderItems.length > 0) {
             folderItems.forEach(subItem => {
-                contentContainer.appendChild(createPreviewItem(subItem, true)); // true = isSublink
+                contentContainer.appendChild(createPreviewItem(subItem, true));
             });
         } else {
             const emptyMsg = document.createElement('p');
@@ -184,76 +178,72 @@ function updatePreview() {
             emptyMsg.textContent = 'Pasta Vazia. Adicione itens abaixo.';
             contentContainer.appendChild(emptyMsg);
         }
-        
+
         previewDisplay.appendChild(contentContainer);
     }
 }
 
 
-// --- FUNÇÃO DE GERAÇÃO DE CÓDIGO FINAL ---
+// --- FUNÇÃO DE GERAÇÃO DE CÓDIGO FINAL (MODIFICADA) ---
 
 function generateCode(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const item = {
         title: document.getElementById('title').value.trim(),
         target: document.getElementById('target').value.trim(),
-        description: document.getElementById('description').value.trim(),
-        thumbnail: document.getElementById('thumbnail').value.trim(),
-        type: typeSelect.value, 
-        isVisible: document.getElementById('isVisible').value 
+        description: document.getElementById('description').value.trim(), // Garantido que será "" se vazio
+        thumbnail: document.getElementById('thumbnail').value.trim(),     // Garantido que será "" se vazio
+        type: typeSelect.value,
+        isVisible: document.getElementById('isVisible').value
     };
-    
+
     let codeString = `{\n`;
     codeString += `    title: "${item.title}",\n`;
-    codeString += `    type: "${item.type}",\n`; 
-    
+    codeString += `    type: "${item.type}",\n`;
+
     if (item.type === 'LINK_DIRECT') {
-        // Link Direto: Precisa de target, description, thumbnail
+        // LINK_DIRECT: Inclui target, description e thumbnail, mesmo se vazios
+
         codeString += `    target: "${item.target}",\n`;
-        if (item.description) {
-            codeString += `    description: "${item.description}",\n`;
-        }
-        if (item.thumbnail) {
-            codeString += `    thumbnail: "${item.thumbnail}",\n`;
-        }
+        // *NOVIDADE: Descrição e Thumbnail incluídas sempre*
+        codeString += `    description: "${item.description}",\n`;
+        codeString += `    thumbnail: "${item.thumbnail}",\n`;
+
     } else if (item.type === 'FOLDER') {
-        // Pasta: Precisa de isExpanded e items
-        
+        // FOLDER: Estrutura da pasta
+
         codeString += `    isExpanded: false, // Defina para 'true' se quiser que comece aberta\n`;
         codeString += `    items: [\n`;
-        
+
         // Adiciona os sublinks da pasta
         folderItems.forEach((subItem, index) => {
+
+            // Os valores de subItem.description e subItem.thumbnail já são "" se vazios
+            const subDescription = subItem.description;
+            const subThumbnail = subItem.thumbnail;
+
             codeString += `        {\n`;
             codeString += `            title: "${subItem.title}",\n`;
             codeString += `            target: "${subItem.target}",\n`;
-            
-            if (subItem.description) {
-                 codeString += `            description: "${subItem.description}",\n`;
-            } else {
-                 // Adiciona um placeholder para a quebra de linha correta se não houver descrição
-                 codeString += `\n`; 
-            }
-            
-            if (subItem.thumbnail) {
-                 codeString += `            thumbnail: "${subItem.thumbnail}"\n`;
-            }
-            
-            // Remove a vírgula extra no penúltimo item
-            codeString = codeString.replace(/,\n$/, '\n'); 
-            
+
+            // *NOVIDADE: Descrição incluída sempre*
+            codeString += `            description: "${subDescription}",\n`;
+
+            // *NOVIDADE: Thumbnail incluída sempre (último item, sem vírgula)*
+            codeString += `            thumbnail: "${subThumbnail}"\n`;
+
             codeString += `        }${index < folderItems.length - 1 ? ',' : ''}\n`;
         });
-        
+
         codeString += `    ],\n`;
     }
-    
+
     // Adiciona isVisible por último
-    codeString += `    isVisible: ${item.isVisible}\n`; 
-    
+    codeString += `    isVisible: ${item.isVisible}\n`;
+
     codeString += `}`;
-    
+
     codeOutput.textContent = codeString;
 }
 
@@ -286,7 +276,7 @@ function toggleFolderManagement() {
     // Limpa os itens ao trocar de tipo para evitar confusão
     folderItems = [];
     renderFolderItemsList();
-    updatePreview(); 
+    updatePreview();
 }
 
 // 1. Adiciona a função de pré-visualização em tempo real
@@ -305,8 +295,8 @@ renderFolderItemsList();
 toggleFolderManagement();
 updatePreview();
 
-// Adiciona a função copyCode ao escopo global para que o botão HTML possa chamá-la
-window.copyCode = function() {
+// Adiciona as funções ao escopo global para que o botão HTML possa chamá-las
+window.copyCode = function () {
     const textToCopy = codeOutput.textContent;
     navigator.clipboard.writeText(textToCopy).then(() => {
         alert('Código copiado para a área de transferência!');
@@ -316,6 +306,5 @@ window.copyCode = function() {
     });
 }
 
-// Adiciona a função addItem ao escopo global para o botão HTML
 window.addItem = addItem;
 window.removeItem = removeItem;
