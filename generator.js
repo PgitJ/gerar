@@ -40,7 +40,7 @@ function addItem() {
     };
 
     folderItems.push(newItem);
-
+    
     // Limpa o formulário de adição
     document.getElementById('item-title').value = '';
     document.getElementById('item-target').value = '';
@@ -66,7 +66,7 @@ function removeItem(index) {
  */
 function renderFolderItemsList() {
     sublinkList.innerHTML = '';
-
+    
     if (folderItems.length === 0) {
         noItemsMessage.style.display = 'block';
         sublinkList.appendChild(noItemsMessage);
@@ -97,27 +97,27 @@ function createPreviewItem(item, isSublink = false) {
     linkElement.href = item.target || '#';
     linkElement.target = "_blank";
     linkElement.className = 'preview-link-item';
-
+    
     const titleColor = isSublink ? '#333' : '#333';
     const descColor = isSublink ? '#666' : '#666';
 
     const img = document.createElement('img');
     // Usa placeholder se não houver URL, mas item.thumbnail pode ser ""
-    img.src = item.thumbnail || 'https://i.pinimg.com/originals/67/54/55/675455f961bfb9346daa8a2b7e41306f.jpg';
+    img.src = item.thumbnail || 'https://i.pinimg.com/originals/67/54/55/675455f961bfb9346daa8a2b7e41306f.jpg'; 
     img.alt = item.title;
     img.className = 'preview-thumbnail';
     linkElement.appendChild(img);
 
     const detailsDiv = document.createElement('div');
     detailsDiv.className = 'preview-details';
-
+    
     const titleH3 = document.createElement('h3');
     titleH3.textContent = item.title;
     titleH3.style.color = titleColor;
     detailsDiv.appendChild(titleH3);
 
     // Só adiciona o parágrafo de descrição se houver texto
-    if (item.description) {
+    if (item.description) { 
         const descP = document.createElement('p');
         descP.textContent = item.description;
         descP.style.color = descColor;
@@ -138,38 +138,38 @@ function updatePreview() {
         target: document.getElementById('target').value.trim(),
         description: document.getElementById('description').value.trim(),
         thumbnail: document.getElementById('thumbnail').value.trim(),
-        type: typeSelect.value,
+        type: typeSelect.value, 
         isVisible: document.getElementById('isVisible').value === 'true'
     };
-
-    previewDisplay.innerHTML = '';
+    
+    previewDisplay.innerHTML = ''; 
 
     if (!item.isVisible) {
         previewDisplay.innerHTML = '<p style="color: red; font-weight: bold; margin-top: 50px;">[Link Oculto] Não será exibido.</p>';
         return;
     }
-
+    
     if (item.type === 'LINK_DIRECT') {
         previewDisplay.appendChild(createPreviewItem(item));
     } else if (item.type === 'FOLDER') {
         const folderTitle = document.createElement('div');
         folderTitle.className = 'preview-folder-title';
-
+        
         const titleH3 = document.createElement('h3');
         titleH3.textContent = item.title;
         folderTitle.appendChild(titleH3);
-
-        const svgIcon = createSvgIcon();
+        
+        const svgIcon = createSvgIcon(); 
         folderTitle.appendChild(svgIcon);
 
         previewDisplay.appendChild(folderTitle);
 
         const contentContainer = document.createElement('div');
         contentContainer.className = 'group-items-container';
-
+        
         if (folderItems.length > 0) {
             folderItems.forEach(subItem => {
-                contentContainer.appendChild(createPreviewItem(subItem, true));
+                contentContainer.appendChild(createPreviewItem(subItem, true)); 
             });
         } else {
             const emptyMsg = document.createElement('p');
@@ -178,7 +178,7 @@ function updatePreview() {
             emptyMsg.textContent = 'Pasta Vazia. Adicione itens abaixo.';
             contentContainer.appendChild(emptyMsg);
         }
-
+        
         previewDisplay.appendChild(contentContainer);
     }
 }
@@ -187,38 +187,38 @@ function updatePreview() {
 // --- FUNÇÃO DE GERAÇÃO DE CÓDIGO FINAL (MODIFICADA) ---
 
 function generateCode(event) {
-    event.preventDefault();
+    event.preventDefault(); 
 
     const item = {
         title: document.getElementById('title').value.trim(),
         target: document.getElementById('target').value.trim(),
         description: document.getElementById('description').value.trim(), // Garantido que será "" se vazio
         thumbnail: document.getElementById('thumbnail').value.trim(),     // Garantido que será "" se vazio
-        type: typeSelect.value,
-        isVisible: document.getElementById('isVisible').value
+        type: typeSelect.value, 
+        isVisible: document.getElementById('isVisible').value 
     };
-
+    
     let codeString = `{\n`;
     codeString += `    title: "${item.title}",\n`;
-    codeString += `    type: "${item.type}",\n`;
-
+    codeString += `    type: "${item.type}",\n`; 
+    
     if (item.type === 'LINK_DIRECT') {
         // LINK_DIRECT: Inclui target, description e thumbnail, mesmo se vazios
-
+        
         codeString += `    target: "${item.target}",\n`;
         // *NOVIDADE: Descrição e Thumbnail incluídas sempre*
-        codeString += `    description: "${item.description}",\n`;
-        codeString += `    thumbnail: "${item.thumbnail}",\n`;
+        codeString += `    description: "${item.description}",\n`; 
+        codeString += `    thumbnail: "${item.thumbnail}",\n`; 
 
     } else if (item.type === 'FOLDER') {
         // FOLDER: Estrutura da pasta
-
+        
         codeString += `    isExpanded: false, // Defina para 'true' se quiser que comece aberta\n`;
         codeString += `    items: [\n`;
-
+        
         // Adiciona os sublinks da pasta
         folderItems.forEach((subItem, index) => {
-
+            
             // Os valores de subItem.description e subItem.thumbnail já são "" se vazios
             const subDescription = subItem.description;
             const subThumbnail = subItem.thumbnail;
@@ -226,24 +226,24 @@ function generateCode(event) {
             codeString += `        {\n`;
             codeString += `            title: "${subItem.title}",\n`;
             codeString += `            target: "${subItem.target}",\n`;
-
+            
             // *NOVIDADE: Descrição incluída sempre*
             codeString += `            description: "${subDescription}",\n`;
-
+            
             // *NOVIDADE: Thumbnail incluída sempre (último item, sem vírgula)*
-            codeString += `            thumbnail: "${subThumbnail}"\n`;
-
-            codeString += `        }${index < folderItems.length - 1 ? ',' : ''}\n`;
+            codeString += `            thumbnail: "${subThumbnail}"\n`; 
+            
+            codeString += `        }${index < folderItems.length - 1 ? ',' : ''}\n`; 
         });
-
+        
         codeString += `    ],\n`;
     }
-
+    
     // Adiciona isVisible por último
-    codeString += `    isVisible: ${item.isVisible}\n`;
-
+    codeString += `    isVisible: ${item.isVisible}\n`; 
+    
     codeString += `}`;
-
+    
     codeOutput.textContent = codeString;
 }
 
@@ -276,7 +276,7 @@ function toggleFolderManagement() {
     // Limpa os itens ao trocar de tipo para evitar confusão
     folderItems = [];
     renderFolderItemsList();
-    updatePreview();
+    updatePreview(); 
 }
 
 // 1. Adiciona a função de pré-visualização em tempo real
@@ -296,7 +296,7 @@ toggleFolderManagement();
 updatePreview();
 
 // Adiciona as funções ao escopo global para que o botão HTML possa chamá-las
-window.copyCode = function () {
+window.copyCode = function() {
     const textToCopy = codeOutput.textContent;
     navigator.clipboard.writeText(textToCopy).then(() => {
         alert('Código copiado para a área de transferência!');
