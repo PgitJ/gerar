@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -302,3 +303,311 @@
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador link</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .panel {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-panel,
+        .code-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        #preview-panel {
+            flex: 0 0 300px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        select {
+            margin-bottom: 10px;
+        }
+
+        /* Estilos da Pré-Visualização */
+        #preview-display {
+            border: 2px solid #ccc;
+            border-radius: 12px;
+            padding: 15px;
+            background-color: #fff;
+            min-height: 150px;
+        }
+
+        .preview-link-item,
+        .preview-folder-title {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .preview-link-item {
+            background-color: #e0e0e0;
+        }
+
+        .preview-link-item:hover {
+            background-color: #d0d0d0;
+        }
+
+        .preview-folder-title {
+            background-color: #1b97f5;
+            color: white;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .preview-folder-title:hover {
+            background-color: #5a6268;
+        }
+
+        .preview-folder-title .arrow-icon {
+            transform: rotate(90deg);
+        }
+
+        .preview-thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 1px solid #ccc;
+        }
+
+        .preview-details h3 {
+            margin: 0;
+            font-size: 16px;
+            color: inherit;
+        }
+
+        .preview-folder-title h3 {
+            color: white;
+        }
+
+        .preview-details p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .group-items-container {
+            padding-left: 10px;
+            border-left: 2px dashed #ccc;
+            margin-left: 10px;
+            margin-top: -10px;
+            padding-top: 15px;
+        }
+
+        .group-items-container .preview-link-item {
+            margin-top: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .group-items-container .preview-link-item:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Estilos da Saída do Código */
+        #code-output {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Gerenciamento de Sublinks (Pasta) */
+        .sublink-form input {
+            margin-bottom: 5px;
+        }
+
+        .sublink-list {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .sublink-item-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .sublink-item-display button {
+            margin-top: 0;
+            padding: 5px 10px;
+            background-color: #dc3545;
+        }
+
+        .sublink-item-display button:hover {
+            background-color: #c82333;
+        }
+
+        .add-item-button {
+            background-color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .add-item-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Gerador de Link Automático</h1>
+
+    <div class="container">
+
+        <div class="panel form-panel">
+            <h2>1. Dados do Grupo/Link Principal</h2>
+            <form id="main-link-form">
+                <label for="title">Título Principal (Link ou Grupo):</label>
+                <input type="text" id="title" required placeholder="Ex: Meu Produto Top / GRUPO DE PROMOÇÕES">
+
+                <label for="target">URL de Destino (Ignorado se for Pasta):</label>
+                <input type="text" id="target" placeholder="Ex: https://meusite.com/produto">
+
+                <label for="description">Descrição (opcional):</label>
+                <input type="text" id="description" placeholder="Ex: Oferta válida por tempo limitado!">
+
+                <label for="thumbnail">Link da Imagem (URL):</label>
+                <input type="text" id="thumbnail"
+                    placeholder="Ex: https://d3rq6m369s8u39.cloudfront.net/upload/imagem.png">
+
+                <label for="type">Tipo de Item:</label>
+                <select id="type">
+                    <option value="LINK_DIRECT">Link Direto (Botão simples)</option>
+                    <option value="FOLDER">Pasta (Grupo de links)</option>
+                </select>
+
+                <label for="isVisible">Visibilidade:</label>
+                <select id="isVisible">
+                    <option value="true">Visível (Exibir)</option>
+                    <option value="false">Oculto (Não exibir)</option>
+                </select>
+
+                <div id="folder-items-management"
+                    style="display: none; border-top: 2px solid #007bff; padding-top: 15px; margin-top: 15px;">
+                    <h3>Itens da Pasta (Sublinks)</h3>
+
+                    <div class="sublink-form">
+                        <input type="text" id="item-title" placeholder="Título do Sublink"
+                            style="width: 48%; display: inline-block;">
+                        <input type="text" id="item-target" placeholder="URL do Sublink"
+                            style="width: 48%; display: inline-block;">
+                        <input type="text" id="item-description" placeholder="Descrição do Sublink">
+                        <input type="text" id="item-thumbnail" placeholder="URL da Imagem do Sublink">
+                        <button type="button" onclick="addItem()">Adicionar Item</button>
+                    </div>
+
+                    <div class="sublink-list" id="sublink-list">
+                        <p id="no-items-message" style="color: #999;">Nenhum sublink adicionado.</p>
+                    </div>
+                </div>
+
+                <button type="submit">Gerar Código</button>
+            </form>
+        </div>
+
+        <div class="panel" id="preview-panel">
+            <h2>2. Pré-visualização</h2>
+            <div id="preview-display">
+                <p style="color: #999;">Preencha os campos para ver o resultado.</p>
+            </div>
+        </div>
+
+        <div class="panel code-panel">
+            <h2>3. Código JavaScript Gerado</h2>
+            <pre id="code-output">Clique em "Gerar Código" para ver o resultado.</pre>
+            <button onclick="copyCode()">Copiar Código</button>
+        </div>
+    </div>
+
+    <script src="generator.js"></script>
+</body>
+
+
+</html>
+
+>>>>>>> b8c451f7537e1e95481e431b07f92e7557210711
