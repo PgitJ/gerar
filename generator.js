@@ -1,4 +1,4 @@
-// generator.js - Versão 3.1 (Correção de Campos Vazios)
+// generator.js - Versão 3.4 (Remoção de target/desc/thumb de FOLDER)
 
 const mainForm = document.getElementById('main-link-form');
 const typeSelect = document.getElementById('type');
@@ -17,13 +17,9 @@ const mainFields = ['title', 'target', 'description', 'thumbnail', 'type', 'isVi
 
 // --- FUNÇÕES DE GERENCIAMENTO DE SUBITENS (PASTA) ---
 
-/**
- * Adiciona um novo item (sublink) à lista folderItems.
- */
 function addItem() {
     const itemTitle = document.getElementById('item-title').value.trim();
     const itemTarget = document.getElementById('item-target').value.trim();
-    // NOTA: Esses campos agora armazenam "" se vazios
     const itemDescription = document.getElementById('item-description').value.trim();
     const itemThumbnail = document.getElementById('item-thumbnail').value.trim();
 
@@ -48,22 +44,15 @@ function addItem() {
     document.getElementById('item-thumbnail').value = '';
 
     renderFolderItemsList();
-    updatePreview(); // Atualiza a pré-visualização após adicionar
+    updatePreview(); 
 }
 
-/**
- * Remove um item da lista pelo seu índice.
- * @param {number} index - O índice do item a ser removido.
- */
 function removeItem(index) {
     folderItems.splice(index, 1);
     renderFolderItemsList();
-    updatePreview(); // Atualiza a pré-visualização após remover
+    updatePreview(); 
 }
 
-/**
- * Renderiza a lista de sublinks adicionados na área de gerenciamento.
- */
 function renderFolderItemsList() {
     sublinkList.innerHTML = '';
     
@@ -87,11 +76,8 @@ function renderFolderItemsList() {
 }
 
 
-// --- FUNÇÃO DE PRÉ-VISUALIZAÇÃO (mantida a lógica de visualização) ---
+// --- FUNÇÕES DE PRÉ-VISUALIZAÇÃO ---
 
-/**
- * Cria a estrutura HTML de um link individual (para pré-visualização).
- */
 function createPreviewItem(item, isSublink = false) {
     const linkElement = document.createElement('a');
     linkElement.href = item.target || '#';
@@ -102,8 +88,7 @@ function createPreviewItem(item, isSublink = false) {
     const descColor = isSublink ? '#666' : '#666';
 
     const img = document.createElement('img');
-    // Usa placeholder se não houver URL, mas item.thumbnail pode ser ""
-    img.src = item.thumbnail || 'https://i.pinimg.com/originals/67/54/55/675455f961bfb9346daa8a2b7e41306f.jpg'; 
+    img.src = item.thumbnail || 'https://via.placeholder.com/50'; 
     img.alt = item.title;
     img.className = 'preview-thumbnail';
     linkElement.appendChild(img);
@@ -116,7 +101,6 @@ function createPreviewItem(item, isSublink = false) {
     titleH3.style.color = titleColor;
     detailsDiv.appendChild(titleH3);
 
-    // Só adiciona o parágrafo de descrição se houver texto
     if (item.description) { 
         const descP = document.createElement('p');
         descP.textContent = item.description;
@@ -129,9 +113,6 @@ function createPreviewItem(item, isSublink = false) {
 }
 
 
-/**
- * Atualiza a pré-visualização em tempo real.
- */
 function updatePreview() {
     const item = {
         title: document.getElementById('title').value.trim() || 'Título de Exemplo',
@@ -175,7 +156,7 @@ function updatePreview() {
             const emptyMsg = document.createElement('p');
             emptyMsg.style.margin = '10px';
             emptyMsg.style.fontStyle = 'italic';
-            emptyMsg.textContent = 'Pasta Vazia. Adicione itens abaixo.';
+            emptyMsg.textContent = 'Pasta Vazia. Adicione itens abaixo. O template será gerado no código.';
             contentContainer.appendChild(emptyMsg);
         }
         
@@ -192,8 +173,8 @@ function generateCode(event) {
     const item = {
         title: document.getElementById('title').value.trim(),
         target: document.getElementById('target').value.trim(),
-        description: document.getElementById('description').value.trim(), // Garantido que será "" se vazio
-        thumbnail: document.getElementById('thumbnail').value.trim(),     // Garantido que será "" se vazio
+        description: document.getElementById('description').value.trim(),
+        thumbnail: document.getElementById('thumbnail').value.trim(),
         type: typeSelect.value, 
         isVisible: document.getElementById('isVisible').value 
     };
@@ -201,25 +182,21 @@ function generateCode(event) {
     let codeString = `{\n`;
     codeString += `    title: "${item.title}",\n`;
     codeString += `    type: "${item.type}",\n`; 
-    
+
     if (item.type === 'LINK_DIRECT') {
-        // LINK_DIRECT: Inclui target, description e thumbnail, mesmo se vazios
-        
-        codeString += `    target: "${item.target}",\n`;
-        // *NOVIDADE: Descrição e Thumbnail incluídas sempre*
+        // LINK_DIRECT: Inclui target, description e thumbnail (como no main.js original)
+        codeString += `    target: "${item.target}",\n`; 
         codeString += `    description: "${item.description}",\n`; 
         codeString += `    thumbnail: "${item.thumbnail}",\n`; 
 
     } else if (item.type === 'FOLDER') {
-        // FOLDER: Estrutura da pasta
+        // FOLDER: NÃO inclui target, description, thumbnail (como no main.js original)
         
         codeString += `    isExpanded: false, // Defina para 'true' se quiser que comece aberta\n`;
         codeString += `    items: [\n`;
         
-        // Adiciona os sublinks da pasta
+        // Adiciona os sublinks criados pelo usuário
         folderItems.forEach((subItem, index) => {
-            
-            // Os valores de subItem.description e subItem.thumbnail já são "" se vazios
             const subDescription = subItem.description;
             const subThumbnail = subItem.thumbnail;
 
@@ -227,17 +204,25 @@ function generateCode(event) {
             codeString += `            title: "${subItem.title}",\n`;
             codeString += `            target: "${subItem.target}",\n`;
             
-            // *NOVIDADE: Descrição incluída sempre*
+            // Sub-itens: description e thumbnail são incluídos, mesmo vazios
             codeString += `            description: "${subDescription}",\n`;
-            
-            // *NOVIDADE: Thumbnail incluída sempre (último item, sem vírgula)*
             codeString += `            thumbnail: "${subThumbnail}"\n`; 
             
             codeString += `        }${index < folderItems.length - 1 ? ',' : ''}\n`; 
         });
         
+        // Se a lista estiver vazia, adiciona o item template vazio
+        if (folderItems.length === 0) {
+            codeString += `        {\n`;
+            codeString += `            title: "",\n`;
+            codeString += `            target: "",\n`;
+            codeString += `            description: "",\n`;
+            codeString += `            thumbnail: ""\n`;
+            codeString += `        }\n`;
+        }
+        
         codeString += `    ],\n`;
-    }
+    } 
     
     // Adiciona isVisible por último
     codeString += `    isVisible: ${item.isVisible}\n`; 
@@ -250,9 +235,6 @@ function generateCode(event) {
 
 // --- FUNÇÕES AUXILIARES E INICIALIZAÇÃO ---
 
-/**
- * Função utilitária para criar e retornar o elemento SVG da seta.
- */
 function createSvgIcon() {
     const svgHTML = `
         <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -264,16 +246,12 @@ function createSvgIcon() {
     return tempDiv.firstChild;
 }
 
-/**
- * Alterna a visibilidade da seção de gerenciamento de sublinks.
- */
 function toggleFolderManagement() {
     if (typeSelect.value === 'FOLDER') {
         folderManagement.style.display = 'block';
     } else {
         folderManagement.style.display = 'none';
     }
-    // Limpa os itens ao trocar de tipo para evitar confusão
     folderItems = [];
     renderFolderItemsList();
     updatePreview(); 
