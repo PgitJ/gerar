@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Linktree Personalizado</title>
+    <title>Gerador de Link</title>
+    <link rel="icon" href="https://cdn.invertexto.com/img/apple-touch-icon.png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +28,7 @@
         .panel {
             padding: 20px;
             border-radius: 8px;
-            background-color: #3d3d3d;
+            background-color: #222831;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -58,26 +59,42 @@
             font-weight: bold;
         }
 
+        input[type="text"]::placeholder {
+            color: #e0e0e0;
+        }
+
         input[type="text"],
         textarea,
         select {
+            color: whitesmoke;
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            background-color: #393E46;
+
         }
 
         select {
             margin-bottom: 10px;
         }
 
+        select::picker-icon {
+            color: #999999;
+            transition: 0.4s rotate;
+        }
+
+        select:open::picker-icon {
+            rotate: 180deg;
+        }
+
         /* Estilos da Pré-Visualização */
         #preview-display {
-            border: 2px solid #00c8ff;
+            border: 2px solid #DFD0B8;
             border-radius: 12px;
             padding: 15px;
-            background-color: #d4d4d4;
+            background-color: #393E46;
             min-height: 150px;
         }
 
@@ -147,7 +164,7 @@
 
         .group-items-container {
             padding-left: 10px;
-            border-left: 2px dashed #ccc;
+            border-left: 2px dashed #666;
             margin-left: 10px;
             margin-top: -10px;
             padding-top: 15px;
@@ -235,12 +252,12 @@
 
 <body>
 
-    <h1 style="color: white;">Gerador de Link (Linktree Style)</h1>
+    <h1 style="color: white;">Gerador de Link Automático</h1>
 
     <div class="container">
 
         <div class="panel form-panel">
-            <h2>1. Dados do Grupo/Link Principal</h2>
+            <h2>1. Dados do Links</h2>
             <form id="main-link-form">
                 <label for="title">Título Principal (Link ou Grupo):</label>
                 <input type="text" id="title" required placeholder="Ex: Meu Produto Top / GRUPO DE PROMOÇÕES">
@@ -291,14 +308,14 @@
         </div>
 
         <div class="panel" id="preview-panel">
-            <h2>2. Pré-visualização</h2>
+            <h2>Pré-visualização</h2>
             <div id="preview-display">
                 <p style="color: #999;">Preencha os campos para ver o resultado.</p>
             </div>
         </div>
 
         <div class="panel code-panel">
-            <h2>3. Código JavaScript Gerado</h2>
+            <h2>Código Gerado</h2>
             <pre id="code-output">Clique em "Gerar Código" para ver o resultado.</pre>
             <button onclick="copyCode()">Copiar Código</button>
         </div>
