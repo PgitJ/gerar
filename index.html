@@ -7,12 +7,12 @@
     <title>Gerador de Linktree Personalizado</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            background-color: #f0f2f5;
+            background-color: #121212;
         }
 
         .container {
@@ -27,7 +27,7 @@
         .panel {
             padding: 20px;
             border-radius: 8px;
-            background-color: #fff;
+            background-color: #3d3d3d;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -35,12 +35,15 @@
         .code-panel {
             flex: 1;
             min-width: 300px;
+            color: white;
         }
 
         #preview-panel {
+
             flex: 0 0 300px;
             padding: 20px;
             text-align: center;
+            color: white;
         }
 
         h2 {
@@ -71,10 +74,10 @@
 
         /* Estilos da Pré-Visualização */
         #preview-display {
-            border: 2px solid #ccc;
+            border: 2px solid #00c8ff;
             border-radius: 12px;
             padding: 15px;
-            background-color: #fff;
+            background-color: #d4d4d4;
             min-height: 150px;
         }
 
@@ -94,7 +97,7 @@
         }
 
         .preview-link-item {
-            background-color: #e0e0e0;
+            background-color: rgba(246, 246, 246, 1);
         }
 
         .preview-link-item:hover {
@@ -201,10 +204,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-family: cursive;
             background-color: #f1f1f1;
             padding: 5px 10px;
             border-radius: 4px;
             margin-bottom: 5px;
+            color: #121212;
         }
 
         .sublink-item-display button {
@@ -230,7 +235,7 @@
 
 <body>
 
-    <h1>Gerador de Link (Linktree Style)</h1>
+    <h1 style="color: white;">Gerador de Link (Linktree Style)</h1>
 
     <div class="container">
 
@@ -273,7 +278,7 @@
                             style="width: 48%; display: inline-block;">
                         <input type="text" id="item-description" placeholder="Descrição do Sublink">
                         <input type="text" id="item-thumbnail" placeholder="URL da Imagem do Sublink">
-                        <button type="button" onclick="addItem()">Adicionar Item</button>
+                        <button class="add-item-button" type="button" onclick="addItem()">Adicionar Item</button>
                     </div>
 
                     <div class="sublink-list" id="sublink-list">

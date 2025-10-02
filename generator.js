@@ -88,7 +88,7 @@ function createPreviewItem(item, isSublink = false) {
     const descColor = isSublink ? '#666' : '#666';
 
     const img = document.createElement('img');
-    img.src = item.thumbnail || 'https://via.placeholder.com/50'; 
+    img.src = item.thumbnail || 'https://i.pinimg.com/originals/67/54/55/675455f961bfb9346daa8a2b7e41306f.jpg'; 
     img.alt = item.title;
     img.className = 'preview-thumbnail';
     linkElement.appendChild(img);
